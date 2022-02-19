@@ -1,0 +1,15 @@
+[package]
+name = "middleman"
+version = "1.0.0"
+authors = [ "yum0e",]
+edition = "2018"
+publish = false
+
+[lib]
+path = "src/adder.rs"
+
+[dependencies.elrond-wasm]
+version = "0.27.4"
+
+[dev-dependencies.elrond-wasm-debug]
+version = "0.27.4"
