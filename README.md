@@ -12,4 +12,4 @@ That's why I am aiming at delivering a secure smart contract based p2p service i
 
 In the same time, I am sharing the code as long as I see near nobody with open source projects on Elrond. I will make sure to be 100% transparent in my future projects in order to help new devs contribute to the network.
 
-Don't hesitate to reach out on twitter @yum0e
+Don't hesitate to reach out on twitter @yum0ee
