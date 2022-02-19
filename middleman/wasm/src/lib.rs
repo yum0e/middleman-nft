@@ -5,10 +5,11 @@
 #![no_std]
 
 elrond_wasm_node::wasm_endpoints! {
-    adder
+    middleman
     (
-        add
-        getSum
+        CreateOffer
+        getNbOffers
+        getOffersWithId
     )
 }
 
