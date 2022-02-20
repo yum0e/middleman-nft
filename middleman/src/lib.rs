@@ -112,6 +112,48 @@ pub trait Middleman {
         Ok(id)
     }
 
+    #[payable("*")]
+    #[view(acceptOffer)]
+    fn accept_offer(
+        &self,
+        #[payment_token] token_id: TokenIdentifier,
+        #[payment_amount] egld_amount: BigUint,
+        id: u64,
+        fees: u64
+    ) -> SCResult<u64> {
+        let caller = self.blockchain().get_caller();
+        let mut offer = self.offers_with_id(&id).get();
+        require!(offer.spender == caller, "You are not the spender designated for this offer");
+        require!(token_id.is_egld(), "Only pay with egld");
+        require!(offer.status == Status::Submitted, "Offer deleted or completed");
+        require!(egld_amount == offer.amount, "Incorrect egld amount");
+        require!(fees <= 10_000, "too much fees asked");
+
+        // fees of 2% to be implemented, just experimenting for now
+        let big_amount = egld_amount * BigUint::from(fees);
+        let real_amount = big_amount / BigUint::from(100u64);
+
+        // send egld to previous holder
+        self.send().direct_egld(
+            &offer.nft_holder,
+            &real_amount,
+            &[]
+        );
+
+        // send the nft to the caller
+        self.send().direct(
+            &caller,
+            &offer.token_id,
+            offer.nonce,
+            &BigUint::from(1u64),
+            &[]
+        );
+        // update status
+        offer.status = Status::Completed;
+        self.offers_with_id(&id).set(offer);
+        Ok(id)
+    }
+
 
    // storage
 

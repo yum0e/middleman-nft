@@ -1,6 +1,7 @@
 WALLET_PEM="~/Elrond/pems/yum0e1.pem"
 OTHER_PEM="~/Elrond/pems/yum0e2.pem"
 MY_ADDRESS="erd14q22erffu7r56mf26yx4erww9k0yresxmudte0etacl950ef7fys9qcus5"
+OTHER_ADDRESS="erd1wx7h5rnyxre7avl5pkgj3c2fha9aknrwms8mspelfcapwvjac3vqncm7nm"
 
 PROXY="https://devnet-gateway.elrond.com"
 CHAIN="D"
@@ -49,13 +50,12 @@ createOffer() {
     --chain=${CHAIN} --proxy=${PROXY} \
     --gas-limit=50000000 \
     --value=0 \
-    --data="ESDTNFTTransfer@${token_id}@$1@01@${destination}@${method}@${spender2}@016345785D8A0000" \
+    --data="ESDTNFTTransfer@${token_id}@$1@01@${destination}@${method}@${spender2}@0DE0B6B3A7640000" \
     --send
 }
 
 deleteOffer() {
     # $1 offer id
-    token_id="0x$(echo -n 'TST-9224fc' | xxd -p -u | tr -d '\n')"
     
     erdpy --verbose contract call ${ADDRESS} --recall-nonce \
     --pem=${WALLET_PEM} \
@@ -64,6 +64,62 @@ deleteOffer() {
     --value=0 \
     --function=deleteOffer \
     --arguments $1 \
+    --send
+}
+
+acceptOffer() {
+    # $1 offer id
+    
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce \
+    --pem=${OTHER_PEM} \
+    --chain=${CHAIN} --proxy=${PROXY} \
+    --gas-limit=50000000 \
+    --value=1000000000000000000 \
+    --function=acceptOffer \
+    --arguments $1 0x32 \
+    --send
+}
+
+createOffer2() {
+    # $1 nonce
+    spender="$(erdpy wallet bech32 --decode erd14q22erffu7r56mf26yx4erww9k0yresxmudte0etacl950ef7fys9qcus5)"
+    spender2="$(erdpy wallet bech32 --decode erd1wx7h5rnyxre7avl5pkgj3c2fha9aknrwms8mspelfcapwvjac3vqncm7nm)" # yum0e2
+    destination="$(erdpy wallet bech32 --decode $ADDRESS)"
+    token_id="$(echo -n 'TST-9224fc' | xxd -p -u | tr -d '\n')"
+    method="$(echo -n 'createOffer' | xxd -p -u | tr -d '\n')"
+
+    erdpy --verbose tx new --receiver=${OTHER_ADDRESS} --recall-nonce \
+    --pem=${OTHER_PEM} \
+    --chain=${CHAIN} --proxy=${PROXY} \
+    --gas-limit=50000000 \
+    --value=0 \
+    --data="ESDTNFTTransfer@${token_id}@$1@01@${destination}@${method}@${spender}@0DE0B6B3A7640000" \
+    --send
+}
+
+deleteOffer() {
+    # $1 offer id
+    
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce \
+    --pem=${OTHER_PEM} \
+    --chain=${CHAIN} --proxy=${PROXY} \
+    --gas-limit=50000000 \
+    --value=0 \
+    --function=deleteOffer \
+    --arguments $1 \
+    --send
+}
+
+acceptOffer2() {
+    # $1 offer id
+    
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce \
+    --pem=${WALLET_PEM} \
+    --chain=${CHAIN} --proxy=${PROXY} \
+    --gas-limit=50000000 \
+    --value=1000000000000000000 \
+    --function=acceptOffer \
+    --arguments $1 0x32 \
     --send
 }
 
