@@ -118,10 +118,9 @@ pub trait Middleman {
         require!(token_id.is_egld(), "Only pay with egld");
         require!(offer.status == Status::Submitted, "Offer deleted or completed");
         require!(egld_amount == offer.amount, "Incorrect egld amount");
-        require!(fees <= 10_000, "too much fees asked");
 
         // fees of 2% 
-        let big_amount = egld_amount * BigUint::from(2);
+        let big_amount = egld_amount * BigUint::from(98u64);
         let real_amount = big_amount / BigUint::from(100u64);
 
         // send egld to previous holder

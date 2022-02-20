@@ -76,7 +76,7 @@ acceptOffer() {
     --gas-limit=50000000 \
     --value=1000000000000000000 \
     --function=acceptOffer \
-    --arguments $1 0x32 \
+    --arguments $1 \
     --send
 }
 
@@ -97,7 +97,7 @@ createOffer2() {
     --send
 }
 
-deleteOffer() {
+deleteOffer2() {
     # $1 offer id
     
     erdpy --verbose contract call ${ADDRESS} --recall-nonce \
@@ -119,7 +119,7 @@ acceptOffer2() {
     --gas-limit=50000000 \
     --value=1000000000000000000 \
     --function=acceptOffer \
-    --arguments $1 0x32 \
+    --arguments $1 \
     --send
 }
 
