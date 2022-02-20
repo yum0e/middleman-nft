@@ -7,9 +7,13 @@
 elrond_wasm_node::wasm_endpoints! {
     middleman
     (
-        CreateOffer
-        getNbOffers
+        createOffer
+        deleteOffer
+        getOffersCount
+        getOffersFrom
+        getOffersTo
         getOffersWithId
+        withdraw
     )
 }
 
