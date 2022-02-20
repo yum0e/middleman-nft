@@ -57,26 +57,18 @@ pub trait Middleman {
    #[view(createOffer)]
    fn create_offer(
        &self,
-       spender: ManagedAddress, // the address that will pay
-       amount: BigUint, // amount to pay for the spender
        #[payment_token] token_id: TokenIdentifier, // the collection the nft_holder wants to sell
        #[payment_nonce] nonce: u64, // the nonce of the nft of the collection
+       spender: ManagedAddress, // the address that will pay
+       amount: BigUint, // amount to pay for the spender
     ) -> SCResult<u64> {
         let caller = self.blockchain().get_caller();
-        require!(self.blockchain().get_esdt_balance(
-            &caller,
-            &token_id,
-            nonce
-        ) <= 0 , "You don't own the nft");
-        require!(nonce > 0, "transfer only nft");
         require!(amount >= 0, "The amount specified is below zero");
 
         // creation of the offer and storage
-        
         let id = self.offers_count().get();
         self.offers_from(&caller).update(|vec| vec.push(id));
         self.offers_to(&spender).update(|vec| vec.push(id));
-
         self.offers_count().set(&id + 1);
         let offer = Offer {
             id,
@@ -118,8 +110,7 @@ pub trait Middleman {
         &self,
         #[payment_token] token_id: TokenIdentifier,
         #[payment_amount] egld_amount: BigUint,
-        id: u64,
-        fees: u64
+        id: u64
     ) -> SCResult<u64> {
         let caller = self.blockchain().get_caller();
         let mut offer = self.offers_with_id(&id).get();
@@ -129,8 +120,8 @@ pub trait Middleman {
         require!(egld_amount == offer.amount, "Incorrect egld amount");
         require!(fees <= 10_000, "too much fees asked");
 
-        // fees of 2% to be implemented, just experimenting for now
-        let big_amount = egld_amount * BigUint::from(fees);
+        // fees of 2% 
+        let big_amount = egld_amount * BigUint::from(2);
         let real_amount = big_amount / BigUint::from(100u64);
 
         // send egld to previous holder
