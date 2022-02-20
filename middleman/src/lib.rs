@@ -34,7 +34,7 @@ pub trait Middleman {
    // only-owner
 
    #[only_owner]
-   #[view(withdraw)]
+   #[endpoint(withdraw)]
    fn withdraw_nft(
        &self,
        token_id: TokenIdentifier,
@@ -51,10 +51,10 @@ pub trait Middleman {
        Ok(())
    }
 
-   // view 
+   // endpoint 
 
    #[payable("*")]
-   #[view(createOffer)]
+   #[endpoint(createOffer)]
    fn create_offer(
        &self,
        #[payment_token] token_id: TokenIdentifier, // the collection the nft_holder wants to sell
@@ -83,7 +83,7 @@ pub trait Middleman {
         Ok(id)
     }
 
-    #[view(deleteOffer)]
+    #[endpoint(deleteOffer)]
     fn delete_offer(
         &self,
         id: u64 // id of the offer
@@ -105,7 +105,7 @@ pub trait Middleman {
     }
 
     #[payable("*")]
-    #[view(acceptOffer)]
+    #[endpoint(acceptOffer)]
     fn accept_offer(
         &self,
         #[payment_token] token_id: TokenIdentifier,
