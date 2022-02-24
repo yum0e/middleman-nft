@@ -123,17 +123,13 @@ acceptOffer2() {
     --send
 }
 
-withdraw() {
-    # $1 nonce
-    token_id="0x$(echo -n 'TST-9224fc' | xxd -p -u | tr -d '\n')"
-    
+withdrawBalance() {
     erdpy --verbose contract call ${ADDRESS} --recall-nonce \
     --pem=${WALLET_PEM} \
     --chain=${CHAIN} --proxy=${PROXY} \
     --gas-limit=50000000 \
     --value=0 \
-    --function=withdraw \
-    --arguments $token_id $1 \
+    --function=withdrawBalance \
     --send
 }
 
