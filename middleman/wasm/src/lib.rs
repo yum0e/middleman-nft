@@ -14,7 +14,7 @@ elrond_wasm_node::wasm_endpoints! {
         getOffersFrom
         getOffersTo
         getOffersWithId
-        withdraw
+        withdrawBalance
     )
 }
 

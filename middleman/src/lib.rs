@@ -34,18 +34,13 @@ pub trait Middleman {
    // only-owner
 
    #[only_owner]
-   #[endpoint(withdraw)]
-   fn withdraw_nft(
-       &self,
-       token_id: TokenIdentifier,
-       nonce: u64
-   ) -> SCResult<()> {
+   #[endpoint(withdrawBalance)]
+   fn withdraw_balance(&self) -> SCResult<()> {
        let caller = self.blockchain().get_caller();
-       self.send().direct(
+       let sc_balance = self.blockchain().get_sc_balance(&TokenIdentifier::egld(), 0);
+       self.send().direct_egld(
            &caller,
-           &token_id,
-           nonce,
-           &BigUint::from(1u64),
+           &sc_balance,
            &[]
        );
        Ok(())

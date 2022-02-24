@@ -1,7 +1,7 @@
 [package]
 name = "middleman-wasm"
-version = "0.0.0"
-authors = [ "you",]
+version = "1.0.0"
+authors = [ "yum0e",]
 edition = "2018"
 publish = false
 
@@ -24,8 +24,8 @@ panic = "abort"
 path = ".."
 
 [dependencies.elrond-wasm-node]
-version = "0.27.4"
+version = "0.28.0"
 
 [dependencies.elrond-wasm-output]
-version = "0.27.4"
+version = "0.28.0"
 features = [ "wasm-output-mode",]
