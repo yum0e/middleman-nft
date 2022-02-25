@@ -35,15 +35,15 @@ pub trait Middleman {
 
    #[only_owner]
    #[endpoint(withdrawBalance)]
-   fn withdraw_balance(&self) -> SCResult<()> {
+   fn withdraw_balance(&self) {
        let caller = self.blockchain().get_caller();
        let sc_balance = self.blockchain().get_sc_balance(&TokenIdentifier::egld(), 0);
+       
        self.send().direct_egld(
            &caller,
            &sc_balance,
            &[]
        );
-       Ok(())
    }
 
    // endpoint 
@@ -65,6 +65,7 @@ pub trait Middleman {
         self.offers_from(&caller).update(|vec| vec.push(id));
         self.offers_to(&spender).update(|vec| vec.push(id));
         self.offers_count().set(&id + 1);
+        
         let offer = Offer {
             id,
             spender,
@@ -74,6 +75,7 @@ pub trait Middleman {
             nonce,
             status: Status::Submitted
         };
+        
         self.offers_with_id(&id).set(offer);
         Ok(id)
     }
@@ -87,6 +89,7 @@ pub trait Middleman {
         let mut offer = self.offers_with_id(&id).get();
         require!(offer.nft_holder == caller, "You are not the creator of this offer");
         require!(offer.status == Status::Submitted, "Offer deleted or completed");
+        
         self.send().direct(
             &caller,
             &offer.token_id,
@@ -94,6 +97,7 @@ pub trait Middleman {
             &BigUint::from(1u64),
             &[]
         );
+        
         offer.status = Status::Deleted;
         self.offers_with_id(&id).set(offer);
         Ok(id)
