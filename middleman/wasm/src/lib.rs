@@ -10,6 +10,7 @@ elrond_wasm_node::wasm_endpoints! {
         acceptOffer
         createOffer
         deleteOffer
+        getNbSubmittedFor
         getOffersCount
         getOffersFrom
         getOffersTo

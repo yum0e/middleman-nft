@@ -154,5 +154,10 @@ getOffersFrom() {
 getOffersTo() {
     spender="0x$(erdpy wallet bech32 --decode erd14q22erffu7r56mf26yx4erww9k0yresxmudte0etacl950ef7fys9qcus5)"
     spender2="0x$(erdpy wallet bech32 --decode erd1wx7h5rnyxre7avl5pkgj3c2fha9aknrwms8mspelfcapwvjac3vqncm7nm)" # yum0e2
-    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getOffersTo" --arguments $spender2
+    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getOffersTo" --arguments $spender
+}
+
+getNbSubmittedFor() {
+    spender="0x$(erdpy wallet bech32 --decode erd14q22erffu7r56mf26yx4erww9k0yresxmudte0etacl950ef7fys9qcus5)"
+    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getNbSubmittedFor" --arguments $spender
 }

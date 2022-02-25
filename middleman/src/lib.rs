@@ -139,6 +139,23 @@ pub trait Middleman {
         Ok(id)
     }
 
+    // view
+
+    #[view(getNbSubmittedFor)]
+    fn get_nb_submitted_for(&self, caller: ManagedAddress) -> u64 {
+        let mut counter: u64 = 0;
+        let mut offers = self.offers_to(&caller).get();
+        let offers_from_address = self.offers_from(&caller).get();
+        offers.append_vec(offers_from_address);
+        for id in &offers {
+            match self.offers_with_id(&id).get().status {
+                Status::Submitted => counter += 1u64,
+                _ => (),
+            }
+        }
+        counter
+    }
+
 
    // storage
 
