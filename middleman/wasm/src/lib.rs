@@ -13,6 +13,8 @@ elrond_wasm_node::wasm_endpoints! {
         getNbSubmittedFor
         getOffersCount
         getOffersFrom
+        getOffersSubmittedFrom
+        getOffersSubmittedTo
         getOffersTo
         getOffersWithId
         withdrawBalance

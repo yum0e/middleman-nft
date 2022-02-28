@@ -160,6 +160,31 @@ pub trait Middleman {
         counter
     }
 
+    #[view(getOffersSubmittedTo)]
+    fn get_offers_submitted_to(&self, caller: ManagedAddress) -> ManagedVec<u64> {
+        let mut submitted_to_vec = ManagedVec::new();
+        let mut offers = self.offers_to(&caller).get();
+        for id in &offers {
+            match self.offers_with_id(&id).get().status {
+                Status::Submitted => submitted_to_vec.push(id),
+                _ => (),
+            }
+        }
+        submitted_to_vec
+    }
+
+    #[view(getOffersSubmittedFrom)]
+    fn get_offers_submitted_from(&self, caller: ManagedAddress) -> ManagedVec<u64> {
+        let mut submitted_from_vec = ManagedVec::new();
+        let mut offers = self.offers_from(&caller).get();
+        for id in &offers {
+            match self.offers_with_id(&id).get().status {
+                Status::Submitted => submitted_from_vec.push(id),
+                _ => (),
+            }
+        }
+        submitted_from_vec
+    }
 
    // storage
 
