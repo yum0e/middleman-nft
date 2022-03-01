@@ -1,6 +1,7 @@
 # middleman-nft
 
 Building first secure p2p NFT exchange with near zero fees
+address of the contract : [erd1qqqqqqqqqqqqqpgqx9z6qw9ekttwp2d2h9tvq36ucdlp985035ds9qhmxm](https://explorer.elrond.com/accounts/erd1qqqqqqqqqqqqqpgqx9z6qw9ekttwp2d2h9tvq36ucdlp985035ds9qhmxm)
 
 ## Motivations of this project
 
