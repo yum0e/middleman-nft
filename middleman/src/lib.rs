@@ -2,7 +2,6 @@
 
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
-use crate::elrond_codec::TopEncode;
 
 #[derive(TypeAbi, NestedEncode, NestedDecode, TopEncode, TopDecode, PartialEq)]
 pub enum Status {
@@ -163,7 +162,7 @@ pub trait Middleman {
     #[view(getOffersSubmittedTo)]
     fn get_offers_submitted_to(&self, caller: ManagedAddress) -> ManagedVec<u64> {
         let mut submitted_to_vec = ManagedVec::new();
-        let mut offers = self.offers_to(&caller).get();
+        let offers = self.offers_to(&caller).get();
         for id in &offers {
             match self.offers_with_id(&id).get().status {
                 Status::Submitted => submitted_to_vec.push(id),
@@ -176,7 +175,7 @@ pub trait Middleman {
     #[view(getOffersSubmittedFrom)]
     fn get_offers_submitted_from(&self, caller: ManagedAddress) -> ManagedVec<u64> {
         let mut submitted_from_vec = ManagedVec::new();
-        let mut offers = self.offers_from(&caller).get();
+        let offers = self.offers_from(&caller).get();
         for id in &offers {
             match self.offers_with_id(&id).get().status {
                 Status::Submitted => submitted_from_vec.push(id),
