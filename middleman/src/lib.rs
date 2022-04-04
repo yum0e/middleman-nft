@@ -74,6 +74,13 @@ pub trait Middleman {
             nonce,
             status: Status::Submitted
         };
+
+        // add notifications
+        self.send().direct_egld(
+            &offer.spender,
+            &BigUint::from(1u64),
+            ManagedBuffer::new_from_bytes("Someone sent you an offer on https://www.middleman-nft.com 🛍️".as_bytes())
+        );
         
         self.offers_with_id(&id).set(offer);
         Ok(id)
@@ -121,11 +128,11 @@ pub trait Middleman {
         let big_amount = egld_amount * BigUint::from(98u64);
         let real_amount = big_amount / BigUint::from(100u64);
 
-        // send egld to previous holder
+        // send egld to previous holder + data for notifications
         self.send().direct_egld(
             &offer.nft_holder,
             &real_amount,
-            &[]
+            ManagedBuffer::new_from_bytes("Someone just bought your offer on https://www.middleman-nft.com 💸".as_bytes())
         );
 
         // send the nft to the caller
@@ -136,6 +143,7 @@ pub trait Middleman {
             &BigUint::from(1u64),
             &[]
         );
+
         // update status
         offer.status = Status::Completed;
         self.offers_with_id(&id).set(offer);

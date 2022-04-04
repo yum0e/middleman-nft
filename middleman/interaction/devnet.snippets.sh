@@ -42,7 +42,7 @@ createOffer() {
     spender="$(erdpy wallet bech32 --decode erd14q22erffu7r56mf26yx4erww9k0yresxmudte0etacl950ef7fys9qcus5)"
     spender2="$(erdpy wallet bech32 --decode erd1wx7h5rnyxre7avl5pkgj3c2fha9aknrwms8mspelfcapwvjac3vqncm7nm)" # yum0e2
     destination="$(erdpy wallet bech32 --decode $ADDRESS)"
-    token_id="$(echo -n 'TST-9224fc' | xxd -p -u | tr -d '\n')"
+    token_id="$(echo -n 'TEST-641157' | xxd -p -u | tr -d '\n')"
     method="$(echo -n 'createOffer' | xxd -p -u | tr -d '\n')"
 
     erdpy --verbose tx new --receiver=${MY_ADDRESS} --recall-nonce \
@@ -50,7 +50,7 @@ createOffer() {
     --chain=${CHAIN} --proxy=${PROXY} \
     --gas-limit=50000000 \
     --value=0 \
-    --data="ESDTNFTTransfer@${token_id}@$1@01@${destination}@${method}@${spender2}@0DE0B6B3A7640000" \
+    --data="ESDTNFTTransfer@${token_id}@$1@01@${destination}@${method}@${spender2}@016345785d8a0000" \
     --send
 }
 
@@ -74,7 +74,7 @@ acceptOffer() {
     --pem=${OTHER_PEM} \
     --chain=${CHAIN} --proxy=${PROXY} \
     --gas-limit=50000000 \
-    --value=1000000000000000000 \
+    --value=100000000000000000 \
     --function=acceptOffer \
     --arguments $1 \
     --send
@@ -85,7 +85,7 @@ createOffer2() {
     spender="$(erdpy wallet bech32 --decode erd14q22erffu7r56mf26yx4erww9k0yresxmudte0etacl950ef7fys9qcus5)"
     spender2="$(erdpy wallet bech32 --decode erd1wx7h5rnyxre7avl5pkgj3c2fha9aknrwms8mspelfcapwvjac3vqncm7nm)" # yum0e2
     destination="$(erdpy wallet bech32 --decode $ADDRESS)"
-    token_id="$(echo -n 'TST-9224fc' | xxd -p -u | tr -d '\n')"
+    token_id="$(echo -n 'TEST-641157' | xxd -p -u | tr -d '\n')"
     method="$(echo -n 'createOffer' | xxd -p -u | tr -d '\n')"
 
     erdpy --verbose tx new --receiver=${OTHER_ADDRESS} --recall-nonce \
@@ -93,7 +93,7 @@ createOffer2() {
     --chain=${CHAIN} --proxy=${PROXY} \
     --gas-limit=50000000 \
     --value=0 \
-    --data="ESDTNFTTransfer@${token_id}@$1@01@${destination}@${method}@${spender}@0DE0B6B3A7640000" \
+    --data="ESDTNFTTransfer@${token_id}@$1@01@${destination}@${method}@${spender}@016345785d8a0000" \
     --send
 }
 
@@ -117,7 +117,7 @@ acceptOffer2() {
     --pem=${WALLET_PEM} \
     --chain=${CHAIN} --proxy=${PROXY} \
     --gas-limit=50000000 \
-    --value=1000000000000000000 \
+    --value=100000000000000000 \
     --function=acceptOffer \
     --arguments $1 \
     --send
