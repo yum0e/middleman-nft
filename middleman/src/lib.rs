@@ -132,7 +132,7 @@ pub trait Middleman {
         self.send().direct_egld(
             &offer.nft_holder,
             &real_amount,
-            ManagedBuffer::new_from_bytes("Someone just bought your offer on https://www.middleman-nft.com 💸".as_bytes())
+            ManagedBuffer::new_from_bytes("Someone just accepted your offer on https://www.middleman-nft.com 💸".as_bytes())
         );
 
         // send the nft to the caller
@@ -147,6 +147,7 @@ pub trait Middleman {
         // update status
         offer.status = Status::Completed;
         self.offers_with_id(&id).set(offer);
+
         Ok(id)
     }
 
@@ -191,6 +192,24 @@ pub trait Middleman {
             }
         }
         submitted_from_vec
+    }
+
+    #[view(getLastCompletedOffers)]
+    fn get_last_completed_offers(&self, nb_offers_to_display: u64) -> ManagedVec<u64> {
+        let mut last_completed_offers_vec = ManagedVec::new();
+        let nb_offers: u64 = self.offers_count().get();
+
+        for id in (1..nb_offers).rev() {
+            if (last_completed_offers_vec.len() as u64) < nb_offers_to_display {
+                match self.offers_with_id(&id).get().status {
+                    Status::Completed => last_completed_offers_vec.push(id),
+                    _ => (),
+                }  
+            } else {
+                ()
+            }
+        }
+        last_completed_offers_vec
     }
 
    // storage

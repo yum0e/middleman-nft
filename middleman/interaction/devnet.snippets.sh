@@ -1,7 +1,7 @@
 WALLET_PEM="~/Elrond/pems/yum0e1.pem"
 OTHER_PEM="~/Elrond/pems/yum0e2.pem"
-MY_ADDRESS="erd14q22erffu7r56mf26yx4erww9k0yresxmudte0etacl950ef7fys9qcus5"
-OTHER_ADDRESS="erd1wx7h5rnyxre7avl5pkgj3c2fha9aknrwms8mspelfcapwvjac3vqncm7nm"
+MY_ADDRESS="erd1r5x47cf3mazmpxed9u237sk97a6jm059mna2y7s53zp705khtdks57t3lu"
+OTHER_ADDRESS="erd1yq2v0rpt5h2lfa8ljkgu6mchrjvy6en3ywe2wfnnjun2rs4qu8nqalcfe5"
 
 PROXY="https://devnet-gateway.elrond.com"
 CHAIN="D"
@@ -39,19 +39,21 @@ upgrade() {
 
 createOffer() {
     # $1 nonce
-    spender="$(erdpy wallet bech32 --decode erd14q22erffu7r56mf26yx4erww9k0yresxmudte0etacl950ef7fys9qcus5)"
-    spender2="$(erdpy wallet bech32 --decode erd1wx7h5rnyxre7avl5pkgj3c2fha9aknrwms8mspelfcapwvjac3vqncm7nm)" # yum0e2
-    destination="$(erdpy wallet bech32 --decode $ADDRESS)"
-    token_id="$(echo -n 'TEST-641157' | xxd -p -u | tr -d '\n')"
-    method="$(echo -n 'createOffer' | xxd -p -u | tr -d '\n')"
-
-    erdpy --verbose tx new --receiver=${MY_ADDRESS} --recall-nonce \
+    spender="0x$(erdpy wallet bech32 --decode erd1r5x47cf3mazmpxed9u237sk97a6jm059mna2y7s53zp705khtdks57t3lu)"
+    spender2="0x$(erdpy wallet bech32 --decode erd1yq2v0rpt5h2lfa8ljkgu6mchrjvy6en3ywe2wfnnjun2rs4qu8nqalcfe5)" # yum0e2
+    destination="0x$(erdpy wallet bech32 --decode $ADDRESS)"
+    token_id="0x$(echo -n 'TTTT-75970f' | xxd -p -u | tr -d '\n')"
+    method="0x$(echo -n 'createOffer' | xxd -p -u | tr -d '\n')"
+    
+    erdpy --verbose contract call ${MY_ADDRESS} --recall-nonce \
     --pem=${WALLET_PEM} \
     --chain=${CHAIN} --proxy=${PROXY} \
-    --gas-limit=50000000 \
+    --gas-limit=5000000 \
     --value=0 \
-    --data="ESDTNFTTransfer@${token_id}@$1@01@${destination}@${method}@${spender2}@016345785d8a0000" \
+    --function="ESDTNFTTransfer" \
+    --arguments ${token_id} 01 01 ${destination} ${method} ${spender2} 0x0de0b6b3a7640000 \
     --send
+
 }
 
 deleteOffer() {
@@ -74,7 +76,7 @@ acceptOffer() {
     --pem=${OTHER_PEM} \
     --chain=${CHAIN} --proxy=${PROXY} \
     --gas-limit=50000000 \
-    --value=100000000000000000 \
+    --value=1000000000000000000 \
     --function=acceptOffer \
     --arguments $1 \
     --send
@@ -82,18 +84,19 @@ acceptOffer() {
 
 createOffer2() {
     # $1 nonce
-    spender="$(erdpy wallet bech32 --decode erd14q22erffu7r56mf26yx4erww9k0yresxmudte0etacl950ef7fys9qcus5)"
-    spender2="$(erdpy wallet bech32 --decode erd1wx7h5rnyxre7avl5pkgj3c2fha9aknrwms8mspelfcapwvjac3vqncm7nm)" # yum0e2
-    destination="$(erdpy wallet bech32 --decode $ADDRESS)"
-    token_id="$(echo -n 'TEST-641157' | xxd -p -u | tr -d '\n')"
-    method="$(echo -n 'createOffer' | xxd -p -u | tr -d '\n')"
-
-    erdpy --verbose tx new --receiver=${OTHER_ADDRESS} --recall-nonce \
+    spender="0x$(erdpy wallet bech32 --decode erd1r5x47cf3mazmpxed9u237sk97a6jm059mna2y7s53zp705khtdks57t3lu)"
+    spender2="0x$(erdpy wallet bech32 --decode erd1yq2v0rpt5h2lfa8ljkgu6mchrjvy6en3ywe2wfnnjun2rs4qu8nqalcfe5)" # yum0e2
+    destination="0x$(erdpy wallet bech32 --decode $ADDRESS)"
+    token_id="0x$(echo -n 'TTTT-75970f' | xxd -p -u | tr -d '\n')"
+    method="0x$(echo -n 'createOffer' | xxd -p -u | tr -d '\n')"
+    
+    erdpy --verbose contract call ${OTHER_ADDRESS} --recall-nonce \
     --pem=${OTHER_PEM} \
     --chain=${CHAIN} --proxy=${PROXY} \
-    --gas-limit=50000000 \
+    --gas-limit=5000000 \
     --value=0 \
-    --data="ESDTNFTTransfer@${token_id}@$1@01@${destination}@${method}@${spender}@016345785d8a0000" \
+    --function="ESDTNFTTransfer" \
+    --arguments ${token_id} 01 01 ${destination} ${method} ${spender} 0x0de0b6b3a7640000 \
     --send
 }
 
@@ -117,7 +120,7 @@ acceptOffer2() {
     --pem=${WALLET_PEM} \
     --chain=${CHAIN} --proxy=${PROXY} \
     --gas-limit=50000000 \
-    --value=100000000000000000 \
+    --value=1000000000000000000 \
     --function=acceptOffer \
     --arguments $1 \
     --send
@@ -160,4 +163,12 @@ getOffersTo() {
 getNbSubmittedFor() {
     spender="0x$(erdpy wallet bech32 --decode erd14q22erffu7r56mf26yx4erww9k0yresxmudte0etacl950ef7fys9qcus5)"
     erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getNbSubmittedFor" --arguments $spender
+}
+
+getCompletedOffers() {
+    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getCompletedOffers"
+}
+
+getLastCompletedOffers() {
+    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getLastCompletedOffers" --arguments=$1
 }
